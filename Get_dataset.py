@@ -29,7 +29,6 @@ class get_dataset:
             return r
 
 
-
     def unzip_dataset(dataset_comp):
         if dataset_comp != None:
             with ZipFile(dataset_comp,'r') as zip_object:
@@ -37,22 +36,17 @@ class get_dataset:
             os.remove(dataset_comp)
 
 
-    def get_labels(df):
+    def get_labels(df_img, df_labels):
         labels = []
-        txt_labels = []
-        for i in range(0,len(df)):
-            if df[i].find('virus')!=-1:
-                labels.append(1)
-                txt_labels.append('Virus')
-            elif df[i].find('bacteria')!=-1:
-                labels.append(2)
-                txt_labels.append('Bacteria')
-            else:
-                labels.append(0)
-                txt_labels.append('Normal')
+        for i in range(0,len(df_img)):
+            for j in range(0,len(df_labels)):
+                if df_img[i].find(df_labels[j])!=-1:
+                    labels.append(j)
+
         labels = np.array(labels)
 
-        return labels, txt_labels
+        return labels
+
 
 
     def load_images(df_img):
