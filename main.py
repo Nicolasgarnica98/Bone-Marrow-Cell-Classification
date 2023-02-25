@@ -1,7 +1,7 @@
 import glob
 import os
 import tensorflow as tf 
-from Get_dataset import get_dataset
+from getdataset import get_dataset
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
@@ -22,7 +22,7 @@ def main():
 
     #Split dataset
     df_img_train, df_img_test, df_lbl_train, df_lbl_test = train_test_split(df_img,df_labels,test_size=0.2)
-
+    
     def train_pipeline(train_data, lbl_train, model=None):
         train_img_array = get_dataset.load_images(train_data)
         get_dataset.data_exploration(train_img_array,lbl_train)
