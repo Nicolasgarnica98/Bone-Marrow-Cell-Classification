@@ -49,16 +49,15 @@ class get_dataset:
         return labels
 
 
-    def load_images(df_img):
+    def load_images(df_img, dataset_name):
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         img_array = []
-        for i in tqdm(range(0,len(df_img)),desc='Loading images...'):
+        for i in tqdm(range(0,len(df_img)),desc=f'Loading {dataset_name}: '):
             img_array.append(imread(df_img[i]))
             
         return img_array
 
     def data_exploration(img_array, labels_txt, df_lbl_txt):
-        fig1, ax1 = plt.subplots(2,3)
         plot_img = []
         plot_lbl = []
         for i in range(0,6):
@@ -69,7 +68,7 @@ class get_dataset:
             plot_img.append(img)
             plot_lbl.append(img_label)
         
-        fig1, ax1 = plt.subplots(2,3)
+        fig1, ax1 = plt.subplots(2,3,figsize=(10, 10))
         fig1.suptitle('\nDataset exploration\n')
         ax1[0][0].set_title(f'Img size: {plot_img[0].shape}\n Label: {plot_lbl[0]}')
         ax1[0][0].imshow(plot_img[0], cmap='gray')

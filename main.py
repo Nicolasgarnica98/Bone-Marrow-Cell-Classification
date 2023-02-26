@@ -23,7 +23,7 @@ def main():
     df_img_train, df_img_test, df_lbl_train, df_lbl_test = train_test_split(df_img,df_labels,test_size=0.2)
     
     def train_pipeline(train_data, lbl_train, model=None):
-        train_img_array = get_dataset.load_images(train_data)
+        train_img_array = get_dataset.load_images(train_data,'train data')
         if model == 'CNN_model':
             pp_train_img_data = pre_processing.resize_images(x_size=50, y_size=50, img_array=train_img_array)
             get_dataset.data_exploration(pp_train_img_data,lbl_train,df_lbl)
