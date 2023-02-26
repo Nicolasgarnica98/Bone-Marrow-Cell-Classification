@@ -49,7 +49,6 @@ class get_dataset:
         return labels
 
 
-
     def load_images(df_img):
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         img_array = []
@@ -58,14 +57,15 @@ class get_dataset:
             
         return img_array
 
-    def data_exploration(img_array, labels_txt):
+    def data_exploration(img_array, labels_txt, df_lbl_txt):
         fig1, ax1 = plt.subplots(2,3)
         plot_img = []
         plot_lbl = []
         for i in range(0,6):
             img_indx = np.random.randint(0,len(img_array)-1)
             img = img_array[img_indx]
-            img_label = labels_txt[img_indx]
+            img_label_ = labels_txt[img_indx]
+            img_label = df_lbl_txt[img_label_]
             plot_img.append(img)
             plot_lbl.append(img_label)
         

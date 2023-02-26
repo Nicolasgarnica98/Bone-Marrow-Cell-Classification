@@ -1,5 +1,6 @@
 import glob
 import os
+from preprocessing import pre_processing
 import tensorflow as tf 
 from getdataset import get_dataset
 import pandas as pd
@@ -23,9 +24,11 @@ def main():
     
     def train_pipeline(train_data, lbl_train, model=None):
         train_img_array = get_dataset.load_images(train_data)
-        get_dataset.data_exploration(train_img_array,lbl_train)
+        if model == 'CNN_model':
+            pp_train_img_data = pre_processing.resize_images(x_size=50, y_size=50, img_array=train_img_array)
+            get_dataset.data_exploration(pp_train_img_data,lbl_train,df_lbl)
 
-    train_pipeline(df_img_train,df_lbl_train)
+    train_pipeline(df_img_train,df_lbl_train,'CNN_model')
 
     
 
