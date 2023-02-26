@@ -6,6 +6,7 @@ from tqdm import tqdm
 from zipfile import ZipFile
 from skimage.io import imread
 import matplotlib.pyplot as plt
+from PIL import Image, ImageFile
 
 class get_dataset:
 
@@ -50,6 +51,7 @@ class get_dataset:
 
 
     def load_images(df_img):
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         img_array = []
         for i in tqdm(range(0,len(df_img)),desc='Loading images...'):
             img_array.append(imread(df_img[i]))
