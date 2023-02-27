@@ -9,12 +9,13 @@ from keras.layers import Input, Dense, Conv2D, BatchNormalization, Dropout, MaxP
 
 
 class CNN_Model:
-    def __init__(self, model_name, batch_size=None):
+    def __init__(self, model_name, epochs, batch_size=None):
         self.model_name = model_name
         self.batch_size = batch_size
+        self.epochs = epochs
         pass
 
-    def train_model(self, input_shape, train_labels, train_generator):
+    def train_model(self, input_shape, train_labels, train_generator, val_generator, val_labels):
 
         num_classes = len(np.unique(train_labels))
         i = Input(shape=input_shape)
@@ -26,27 +27,28 @@ class CNN_Model:
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
 
-        # x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
-        # x = BatchNormalization()(x)
-        # x = MaxPooling2D(pool_size=(2,2))(x)
+        x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
+        x = BatchNormalization()(x)
+        x = MaxPooling2D(pool_size=(2,2))(x)
 
         x = Flatten()(x)
         # x = Dense(units=800, activation='relu')(x)
         # x = Dropout(0.3)(x)
-        # x = Dense(units=500,activation='relu')(x)
-        # x = Dropout(0.3)(x)
+        x = Dense(units=500,activation='relu')(x)
+        x = Dropout(0.3)(x)
         x = Dense(units=200,activation='relu')(x)
         x = Dropout(0.1)(x)
         x = Dense(units=50,activation='relu')(x)
-        # x = Dropout(0.1)(x)
+        x = Dropout(0.1)(x)
         x = Dense(num_classes, activation='softmax')(x)
 
         model = Model(i,x)
         model.compile(optimizer='adam',loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-        result = model.fit(train_generator, epochs=20, steps_per_epoch=int(len(train_labels)//self.batch_size))
+        result = model.fit(train_generator, epochs=self.epochs, steps_per_epoch=int(len(train_labels)//self.batch_size), validation_data=val_generator, validation_steps=int(len(val_labels)//self.batch_size))
         model.save(f'./saved models/{self.model_name}_SavedModel.h5')
         np.save(f'./saved train-history/{self.model_name}_SavedTrainHistory.npy',result.history)
-                
+
+
     def get_train_performance_metrics(self):
         
         ModelHistory =np.load(f'./saved train-history/{self.model_name}_SavedTrainHistory.npy',allow_pickle='TRUE').item()
@@ -54,11 +56,13 @@ class CNN_Model:
         fig1.suptitle(f'{self.model_name} evaluation')
         ax1[0].set_title('Accuracy per epoch')
         ax1[0].plot(ModelHistory['accuracy'],label='Accuracy')
+        ax1[0].plot(ModelHistory['val_accuracy'],label='Val Accuracy')
         ax1[0].set_xlabel('Epoch')
         ax1[0].set_ylabel('Accuracy')
         ax1[0].legend()
         ax1[0].grid(True)
-        ax1[1].plot(ModelHistory['loss'],label='Loss',color='orange')
+        ax1[1].plot(ModelHistory['loss'],label='Loss')
+        ax1[1].plot(ModelHistory['val_loss'],label='Val Loss')
         ax1[1].set_title('Loss per epoch')
         ax1[1].set_xlabel('Epoch')
         ax1[1].set_ylabel('Loss')
@@ -68,7 +72,7 @@ class CNN_Model:
         plt.show()
 
 
-    def model_prediction(self, img_array, lbl):
+    def model_prediction(self, img_array, lbl, lbl_txt):
         model = tf.keras.models.load_model(f'./saved models/{self.model_name}_SavedModel.h5')
         prob_predictions = model.predict(img_array)
         predictions = prob_predictions.argmax(axis=1)
@@ -76,8 +80,8 @@ class CNN_Model:
         cm = confusion_matrix(lbl,predictions)
         plt.title('Confusion matrix')
         sn.set(font_scale=1.4)
-        x_axis_labels = ['Normal', 'Virus', 'Bacteria']
-        y_axis_labels = ['Normal', 'Virus', 'Bacteria']
+        x_axis_labels = lbl_txt
+        y_axis_labels = lbl_txt
         conf = sn.heatmap(cm, annot=True, annot_kws={'size':8}, cmap='Blues',xticklabels=x_axis_labels, yticklabels=y_axis_labels)
         conf.set(xlabel='Predicted class', ylabel='True class')
         conf.tick_params(left=True, bottom=True)
@@ -86,6 +90,9 @@ class CNN_Model:
         plt.tight_layout()
         plt.show()
 
+    def get_model_summary(self):
+        model = tf.keras.models.load_model(f'./saved models/{self.model_name}_SavedModel.h5')
+        print(model.summary())
 
 class ML_Model:
     def __init__(self):
