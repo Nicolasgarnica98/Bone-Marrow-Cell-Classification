@@ -9,14 +9,15 @@ from keras.layers import Input, Dense, Conv2D, BatchNormalization, Dropout, MaxP
 
 
 class CNN_Model:
-    def __init__(self, model_name):
+    def __init__(self, model_name, batch_size=None):
         self.model_name = model_name
+        self.batch_size = batch_size
         pass
 
-    def train_model(self, train_array, train_labels):
+    def train_model(self, input_shape, train_labels, train_generator):
 
         num_classes = len(np.unique(train_labels))
-        i = Input(shape=train_array[0].shape)
+        i = Input(shape=input_shape)
         x = Conv2D(filters=32, kernel_size=(3,3), activation='relu',padding='same')(i)
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
@@ -25,24 +26,24 @@ class CNN_Model:
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
 
-        x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling2D(pool_size=(2,2))(x)
+        # x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
+        # x = BatchNormalization()(x)
+        # x = MaxPooling2D(pool_size=(2,2))(x)
 
         x = Flatten()(x)
-        x = Dense(units=800, activation='relu')(x)
-        x = Dropout(0.3)(x)
+        # x = Dense(units=800, activation='relu')(x)
+        # x = Dropout(0.3)(x)
         # x = Dense(units=500,activation='relu')(x)
         # x = Dropout(0.3)(x)
         x = Dense(units=200,activation='relu')(x)
-        x = Dropout(0.2)(x)
-        x = Dense(units=50,activation='relu')(x)
         x = Dropout(0.1)(x)
+        x = Dense(units=50,activation='relu')(x)
+        # x = Dropout(0.1)(x)
         x = Dense(num_classes, activation='softmax')(x)
 
         model = Model(i,x)
         model.compile(optimizer='adam',loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-        result = model.fit(x=train_array,y=train_labels,epochs=30,batch_size=32)
+        result = model.fit(train_generator, epochs=20, steps_per_epoch=int(len(train_labels)//self.batch_size))
         model.save(f'./saved models/{self.model_name}_SavedModel.h5')
         np.save(f'./saved train-history/{self.model_name}_SavedTrainHistory.npy',result.history)
                 
@@ -84,3 +85,8 @@ class CNN_Model:
         print(metrics)
         plt.tight_layout()
         plt.show()
+
+
+class ML_Model:
+    def __init__(self):
+        pass
