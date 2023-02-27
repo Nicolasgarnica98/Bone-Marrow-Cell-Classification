@@ -94,6 +94,8 @@ class CNN_Model:
         model = tf.keras.models.load_model(f'./saved models/{self.model_name}_SavedModel.h5')
         print(model.summary())
 
+
+
 class ML_Model:
     def __init__(self):
         pass
