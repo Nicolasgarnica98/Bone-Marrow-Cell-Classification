@@ -37,7 +37,7 @@ class CNN_Model:
         x = Dense(units=500,activation='relu')(x)
         x = Dropout(0.3)(x)
         x = Dense(units=200,activation='relu')(x)
-        x = Dropout(0.1)(x)
+        x = Dropout(0.25)(x)
         x = Dense(units=50,activation='relu')(x)
         x = Dropout(0.1)(x)
         x = Dense(num_classes, activation='softmax')(x)

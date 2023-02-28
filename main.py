@@ -36,7 +36,7 @@ def main():
             
             training_batch_generator = My_Custom_Generator(train_data,lbl_train,batch_size=batch_size, x_size=x_size, y_size=y_size)
             val_batch_generator = My_Custom_Generator(val_data,lbl_val,batch_size=batch_size, x_size=x_size, y_size=y_size)
-            selected_model.train_model(input_shape=(x_size,y_size,3), train_labels=lbl_train, train_generator=training_batch_generator)
+            selected_model.train_model(input_shape=(x_size,y_size,3), train_labels=lbl_train, train_generator=training_batch_generator, val_generator=val_batch_generator, val_labels=lbl_val)
     
 
     #Decide wich model to use
@@ -44,10 +44,10 @@ def main():
 
     if selected_model == 'CNN_Model':
         #CNN Model, pre processing parameters:
-        batch_size = 512
+        batch_size = 256
         x_size = 80
         y_size = 80
-        actual_model = CNN_Model(model_name=model_name,batch_size=batch_size)
+        actual_model = CNN_Model(model_name=model_name,epochs=35,batch_size=batch_size)
 
     elif selected_model =='ML_Model':
         actual_model = ML_Model
