@@ -72,7 +72,8 @@ class get_dataset:
             for file in df_array[i]:
                 source = file
                 shutil.move(source, folder_array[i])
-        os.remove('./datset/bone_marrow_cell_dataset')
+        if os.path.exists('./datset/bone_marrow_cell_dataset'):
+            os.remove('./datset/bone_marrow_cell_dataset')
 
     def data_exploration(img_array, labels_txt, df_lbl_txt):
         plot_img = []
