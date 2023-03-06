@@ -1,6 +1,8 @@
 import os
 import wget
 import base64
+import shutil
+from tqdm import tqdm
 import numpy as np
 from tqdm import tqdm
 from PIL import ImageFile
@@ -57,6 +59,20 @@ class get_dataset:
             img_array.append(imread(df_img[i]))
             
         return img_array
+    
+    def divide_dataset_in_folders(df_train, df_test, df_val):
+        os.mkdir('./dataset/train')
+        os.mkdir('./dataset/test')
+        os.mkdir('./dataset/val')
+
+        folder_array = ['./dataset/train', './dataset/test', './dataset/val']
+        df_array = [df_train,df_test,df_val]
+
+        for i in tqdm(range(0,len(folder_array)),'Moving files: '):
+            for file in df_array[i]:
+                source = file
+                shutil.move(source, folder_array[i])
+        os.remove('./datset/bone_marrow_cell_dataset')
 
     def data_exploration(img_array, labels_txt, df_lbl_txt):
         plot_img = []
