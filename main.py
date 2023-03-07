@@ -51,8 +51,8 @@ def main():
     if selected_model == 'CNN_Model':
         #CNN Model, pre processing parameters:
         batch_size = 256
-        x_size = 80
-        y_size = 80
+        x_size = 128
+        y_size = 128
         actual_model = CNN_Model(model_name=model_name,epochs=35,batch_size=batch_size)
 
     elif selected_model =='ML_Model':
@@ -63,13 +63,13 @@ def main():
         if os.path.exists('./saved models')==False:
             os.mkdir('./saved models')
             os.mkdir('./saved train-history')
-            train_pipeline(df_img_train,df_lbl_train,df_img_val,df_lbl_val,actual_model)
+            train_pipeline(actual_model)
         else:
-            train_pipeline(df_img_train,df_lbl_train,df_img_val,df_lbl_val,actual_model)
+            train_pipeline(actual_model)
     elif os.path.exists(f'./saved models/{model_name}_SavedModel.h5') == True:
         want_to_train = input(f'If you want to re-train the model "{model_name}", write True: ')
         if want_to_train == 'True':
-            train_pipeline(df_img_train,df_lbl_train,df_img_val,df_lbl_val,actual_model)
+            train_pipeline(actual_model)
     
     #Get train performance metrics
     actual_model.get_train_performance_metrics()

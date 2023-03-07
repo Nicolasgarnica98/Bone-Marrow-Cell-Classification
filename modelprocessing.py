@@ -15,6 +15,7 @@ class CNN_Model:
         self.epochs = epochs
         pass
 
+
     def train_model(self, input_shape, train_labels, train_generator, val_generator, val_labels):
 
         num_classes = len(np.unique(train_labels))
@@ -22,24 +23,24 @@ class CNN_Model:
         x = Conv2D(filters=32, kernel_size=(3,3), activation='relu',padding='same')(i)
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
-
+        
         x = Conv2D(filters=64, kernel_size=(3,3), activation='relu',padding='same')(x)
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
 
-        x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling2D(pool_size=(2,2))(x)
+        # x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
+        # x = BatchNormalization()(x)
+        # x = MaxPooling2D(pool_size=(2,2))(x)
 
         x = Flatten()(x)
         # x = Dense(units=800, activation='relu')(x)
         # x = Dropout(0.3)(x)
-        x = Dense(units=500,activation='relu')(x)
-        x = Dropout(0.3)(x)
-        x = Dense(units=200,activation='relu')(x)
-        x = Dropout(0.25)(x)
-        x = Dense(units=50,activation='relu')(x)
-        x = Dropout(0.1)(x)
+        # x = Dense(units=500,activation='relu')(x)
+        # x = Dropout(0.2)(x)
+        x = Dense(units=256,activation='relu')(x)
+        x = Dropout(0.2)(x)
+        x = Dense(units=64,activation='relu')(x)
+        x = Dropout(0.2)(x)
         x = Dense(num_classes, activation='softmax')(x)
 
         model = Model(i,x)
@@ -93,7 +94,6 @@ class CNN_Model:
     def get_model_summary(self):
         model = tf.keras.models.load_model(f'./saved models/{self.model_name}_SavedModel.h5')
         print(model.summary())
-
 
 
 class ML_Model:
