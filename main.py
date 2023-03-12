@@ -30,19 +30,23 @@ def main():
     def train_pipeline(selected_model=None):
         # train_img_array = get_dataset.load_images(train_data,'train data')
         df_train = glob.glob(os.path.join('dataset/train/*.jpg'))
+        print('\n Train')
         df_val = glob.glob(os.path.join('dataset/val/*.jpg'))
+        get_dataset.count_classes(df_img=df_train, df_labels=df_lbl)
+        print('\n Val')
+        get_dataset.count_classes(df_img=df_val, df_labels=df_lbl)
 
-        lbl_train = get_dataset.get_labels(df_train,df_lbl)
-        lbl_val = get_dataset.get_labels(df_val,df_lbl)
+        # lbl_train = get_dataset.get_labels(df_train,df_lbl)
+        # lbl_val = get_dataset.get_labels(df_val,df_lbl)
 
-        if isinstance(selected_model, CNN_Model):
-            # pp_train_img_data = pre_processing.resize_images(x_size=50, y_size=50, img_array=train_img_array)
-            # get_dataset.data_exploration(pp_train_img_data,lbl_train,df_lbl)
-            # pp_train_img_data = pre_processing.image_normalization(pp_train_img_data)
+        # if isinstance(selected_model, CNN_Model):
+        #     # pp_train_img_data = pre_processing.resize_images(x_size=50, y_size=50, img_array=train_img_array)
+        #     # get_dataset.data_exploration(pp_train_img_data,lbl_train,df_lbl)
+        #     # pp_train_img_data = pre_processing.image_normalization(pp_train_img_data)
             
-            training_batch_generator = My_Custom_Generator(df_train,lbl_train,batch_size=batch_size, x_size=x_size, y_size=y_size)
-            val_batch_generator = My_Custom_Generator(df_val,lbl_val,batch_size=batch_size, x_size=x_size, y_size=y_size)
-            selected_model.train_model(input_shape=(x_size,y_size,3), train_labels=lbl_train, train_generator=training_batch_generator, val_generator=val_batch_generator, val_labels=lbl_val)
+        #     training_batch_generator = My_Custom_Generator(df_train,lbl_train,batch_size=batch_size, x_size=x_size, y_size=y_size)
+        #     val_batch_generator = My_Custom_Generator(df_val,lbl_val,batch_size=batch_size, x_size=x_size, y_size=y_size)
+        #     selected_model.train_model(input_shape=(x_size,y_size,3), train_labels=lbl_train, train_generator=training_batch_generator, val_generator=val_batch_generator, val_labels=lbl_val)
     
 
     #Decide wich model to use
@@ -51,8 +55,8 @@ def main():
     if selected_model == 'CNN_Model':
         #CNN Model, pre processing parameters:
         batch_size = 256
-        x_size = 128
-        y_size = 128
+        x_size = 64
+        y_size = 64
         actual_model = CNN_Model(model_name=model_name,epochs=35,batch_size=batch_size)
 
     elif selected_model =='ML_Model':
@@ -71,19 +75,21 @@ def main():
         if want_to_train == 'True':
             train_pipeline(actual_model)
     
-    #Get train performance metrics
-    actual_model.get_train_performance_metrics()
-    #Get Model summary
-    actual_model.get_model_summary()
+    # #Get train performance metrics
+    # actual_model.get_train_performance_metrics()
+    # #Get Model summary
+    # actual_model.get_model_summary()
 
-    #Get predictions
+    # #Get predictions
+    print('\n Test')
     df_test = glob.glob(os.path.join('dataset/test/*.jpg'))
-    test_img_array = get_dataset.load_images(df_test,'test images')
-    pp_test_img_array = pre_processing.resize_images(x_size=x_size,y_size=y_size, img_array=test_img_array)
-    pp_test_img_array = pre_processing.image_normalization(pp_test_img_array)
-    lbl_test = get_dataset.get_labels(df_test,df_lbl)
-    with tf.device('/CPU:0'):
-        actual_model.model_prediction(pp_test_img_array,lbl_test,df_lbl)
+    get_dataset.count_classes(df_img=df_test, df_labels=df_lbl)
+    # test_img_array = get_dataset.load_images(df_test,'test images')
+    # pp_test_img_array = pre_processing.resize_images(x_size=x_size,y_size=y_size, img_array=test_img_array)
+    # pp_test_img_array = pre_processing.image_normalization(pp_test_img_array)
+    # lbl_test = get_dataset.get_labels(df_test,df_lbl)
+    # with tf.device('/CPU:0'):
+    #     actual_model.model_prediction(pp_test_img_array,lbl_test,df_lbl)
 
 if __name__ =='__main__':
     main()

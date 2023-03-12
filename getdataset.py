@@ -51,6 +51,18 @@ class get_dataset:
 
         return labels
 
+    def count_classes(df_img, df_labels):
+        num_samples_per_class = []
+        for i in range(0,len(df_labels)):
+            num_items_per_class = 0
+            for j in range(0,len(df_img)):
+                if df_img[j].find(df_labels[i])!=-1:
+                    num_items_per_class += 1
+            num_samples_per_class.append(num_items_per_class)
+
+        print(num_samples_per_class)
+        print(df_labels)
+
 
     def load_images(df_img, dataset_name):
         ImageFile.LOAD_TRUNCATED_IMAGES = True

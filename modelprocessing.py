@@ -2,6 +2,7 @@ import os
 import numpy as np
 import seaborn as sn
 import tensorflow as tf
+from keras import regularizers
 from keras.models import Model
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
@@ -20,13 +21,13 @@ class CNN_Model:
 
         num_classes = len(np.unique(train_labels))
         i = Input(shape=input_shape)
-        x = Conv2D(filters=32, kernel_size=(3,3), activation='relu',padding='same')(i)
+        x = Conv2D(filters=32, kernel_size=(3,3), activation='relu',padding='same',kernel_regularizer=regularizers.l2(l=0.01))(i)
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
         
-        x = Conv2D(filters=64, kernel_size=(3,3), activation='relu',padding='same')(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling2D(pool_size=(2,2))(x)
+        # x = Conv2D(filters=64, kernel_size=(3,3), activation='relu',padding='same',kernel_regularizer=regularizers.l2(l=0.01))(x)
+        # x = BatchNormalization()(x)
+        # x = MaxPooling2D(pool_size=(2,2))(x)
 
         # x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same')(x)
         # x = BatchNormalization()(x)
@@ -38,7 +39,7 @@ class CNN_Model:
         # x = Dense(units=500,activation='relu')(x)
         # x = Dropout(0.2)(x)
         x = Dense(units=256,activation='relu')(x)
-        x = Dropout(0.2)(x)
+        x = Dropout(0.35)(x)
         x = Dense(units=64,activation='relu')(x)
         x = Dropout(0.2)(x)
         x = Dense(num_classes, activation='softmax')(x)
