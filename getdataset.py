@@ -50,7 +50,7 @@ class get_dataset:
         labels = np.array(labels)
 
         return labels
-
+    
     def count_classes(df_img, df_labels):
         num_samples_per_class = []
         for i in range(0,len(df_labels)):
@@ -59,9 +59,17 @@ class get_dataset:
                 if df_img[j].find(df_labels[i])!=-1:
                     num_items_per_class += 1
             num_samples_per_class.append(num_items_per_class)
+        return num_samples_per_class
 
-        print(num_samples_per_class)
-        print(df_labels)
+    def delete_unbalanced_classes(df_img,df_labels):
+        new_df_img = df_img
+        num_samples_per_class = get_dataset.count_classes(df_img=new_df_img,df_labels=df_labels)
+        for i in range(0,len(num_samples_per_class)):
+            if num_samples_per_class[i] < 2000:
+                for j in range(0,len(new_df_img)):
+                    if new_df_img[j].find(df_labels[i])!=-1:
+                        os.remove(new_df_img[j])
+        return new_df_img
 
 
     def load_images(df_img, dataset_name):
