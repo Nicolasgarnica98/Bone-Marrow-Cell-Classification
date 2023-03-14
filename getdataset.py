@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 class get_dataset:
 
     def download(url):
-
         def create_onedrive_directdownload (onedrive_link):
             data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))
             data_bytes64_String = data_bytes64.decode('utf-8').replace('/','_').replace('+','-').rstrip("=")
@@ -22,6 +21,7 @@ class get_dataset:
             return resultUrl
 
         if os.path.exists('./dataset') == False:
+            print('Dataset nor found')
             os.mkdir('./dataset')
             onedrive_url = url
             # Generate Direct Download URL from above Script
@@ -29,6 +29,8 @@ class get_dataset:
 
             print('Downloading dataset')
             r = wget.download(url=direct_download_url, out='./dataset/')
+            print('\n')
+            print('Unziping dataset...')
             print('\n')
             return r
 
@@ -40,16 +42,33 @@ class get_dataset:
             os.remove(dataset_comp)
 
 
-    def get_labels(df_img, df_labels):
+    def get_labels(df_img, df_labels=None, data=None):
+        print('Getting data labels...')
+        labels_txt = []
         labels = []
-        for i in range(0,len(df_img)):
-            for j in range(0,len(df_labels)):
-                if df_img[i].find(df_labels[j])!=-1:
-                    labels.append(j)
+        labels_txt_u = []
 
-        labels = np.array(labels)
+        if data=='df_img':
+            for i in range(0,len(df_img)):
+                labels_txt.append(df_img[i][len(df_img[i])-14:len(df_img[i])-11])
+            labels_txt = np.unique(labels_txt)
+            for i in range(0,len(df_img)):
+                for j in range(0,len(labels_txt)):
+                    if df_img[i].find(labels_txt[j])!=-1:
+                        labels.append(j)
+        else:
+            for i in range(0,len(df_img)):
+                for j in range(0,len(df_labels)):
+                    if df_img[i].find(df_labels[j])!=-1:
+                        labels_txt.append(df_labels[j])
 
-        return labels
+            labels_txt_u = np.unique(labels_txt)
+            for i in range(0,len(labels_txt)):
+                for j in range(0,len(labels_txt_u)):
+                    if labels_txt[i]==labels_txt_u[j]:
+                        labels.append(j)
+
+        return labels, labels_txt_u
     
     def count_classes(df_img, df_labels):
         num_samples_per_class = []
@@ -92,8 +111,8 @@ class get_dataset:
             for file in df_array[i]:
                 source = file
                 shutil.move(source, folder_array[i])
-        if os.path.exists('./datset/bone_marrow_cell_dataset'):
-            os.remove('./datset/bone_marrow_cell_dataset')
+        # if os.path.exists('./dataset/bone_marrow_cell_dataset'):
+        #     os.remove('./dataset/bone_marrow_cell_dataset')
 
     def data_exploration(img_array, labels_txt, df_lbl_txt):
         plot_img = []

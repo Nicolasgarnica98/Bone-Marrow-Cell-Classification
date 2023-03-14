@@ -18,12 +18,7 @@ class pre_processing:
             return rs_img_array
 
     def image_normalization(img_array):
-            norm_img_array = img_array
-            act_img = None
-            for i in tqdm(range(0,len(img_array)),'Normalizing images: '):
-                act_img = img_array[i]
-                act_img = act_img/255
-                norm_img_array.append(act_img)
+            norm_img_array = np.array(img_array)/255
             return norm_img_array
 
 
