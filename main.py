@@ -58,14 +58,14 @@ def main():
             selected_model.train_model(input_shape=(x_size,y_size,3), train_labels=lbl_train, train_generator=training_batch_generator, val_generator=val_batch_generator, val_labels=lbl_val)
     
 
-    #Decide wich model to use
+    #Decide which model to use
     selected_model = str(input('Select model from -> CNN_Model, ML_Model: '))
 
     if selected_model == 'CNN_Model':
         #CNN Model, pre processing parameters:
-        batch_size = 50
-        x_size = 128
-        y_size = 128
+        batch_size = 128
+        x_size = 64
+        y_size = 64
         actual_model = CNN_Model(model_name=model_name,epochs=200,batch_size=batch_size)
 
     elif selected_model =='ML_Model':

@@ -23,17 +23,17 @@ class CNN_Model:
         opt = tf.keras.optimizers.Adam(learning_rate=0.01)
         i = Input(shape=input_shape)
 
-        x = Conv2D(filters=32, kernel_size=(3,3), activation='relu',padding='same', kernel_regularizer=regularizers.l2(l=0.0001))(i)
+        x = Conv2D(filters=32, kernel_size=(3,3), activation='relu',padding='same', kernel_regularizer=regularizers.l2(l=0.001))(i)
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
         
-        x = Conv2D(filters=64, kernel_size=(3,3), activation='relu',padding='same',kernel_regularizer=regularizers.l2(l=0.0001))(x)
+        x = Conv2D(filters=64, kernel_size=(3,3), activation='relu',padding='same',kernel_regularizer=regularizers.l2(l=0.001))(x)
         x = BatchNormalization()(x)
         x = MaxPooling2D(pool_size=(2,2))(x)
 
-        x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same',kernel_regularizer=regularizers.l2(l=0.0001))(i)
-        x = BatchNormalization()(x)
-        x = MaxPooling2D(pool_size=(2,2))(x)
+        # x = Conv2D(filters=128, kernel_size=(3,3), activation='relu',padding='same',kernel_regularizer=regularizers.l2(l=0.0001))(i)
+        # x = BatchNormalization()(x)
+        # x = MaxPooling2D(pool_size=(2,2))(x)
 
         x = Flatten()(x)
         x = Dense(units=1024, activation='relu')(x)

@@ -42,5 +42,5 @@ class My_Custom_Generator(keras.utils.Sequence) :
     batch_y = self.labels[idx * self.batch_size : (idx+1) * self.batch_size]
     
     return np.array([
-            resize(imread(str(file_name)), (self.x_size, self.y_size, 3))
+            resize(rgb2gray(imread(str(file_name))), (self.x_size, self.y_size, 3))
                for file_name in batch_x])/255.0, np.array(batch_y)
